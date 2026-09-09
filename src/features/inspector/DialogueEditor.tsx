@@ -13,6 +13,7 @@ export function DialogueEditor({ slide }: { slide: Slide }) {
   const canDelete = useCanEditDestructively()
   const dialogueFontSizePx = useProjectStore((s) => s.project.dialogueFontSizePx) ?? DEFAULT_DIALOGUE_FONT_SIZE_PX
   const setDialogueFontSize = useProjectStore((s) => s.setDialogueFontSize)
+  const resetDialogueBoxLayout = useProjectStore((s) => s.resetDialogueBoxLayout)
 
   return (
     <div className="space-y-2">
@@ -36,6 +37,13 @@ export function DialogueEditor({ slide }: { slide: Slide }) {
             </button>
           ))}
         </div>
+      </div>
+
+      <div className="flex items-center justify-between text-xs text-slate-500">
+        <p>Position &amp; Größe: direkt auf der Bühne ziehen (gilt für die ganze Geschichte)</p>
+        <button onClick={resetDialogueBoxLayout} className="shrink-0 text-slate-400 underline hover:text-slate-600">
+          Zurücksetzen
+        </button>
       </div>
 
       <div className="space-y-2">

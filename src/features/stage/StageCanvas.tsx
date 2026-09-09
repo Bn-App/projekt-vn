@@ -3,7 +3,7 @@ import { useProjectStore, useSelectedSlide } from '../../state/projectStore'
 import { useEditorUiStore } from '../../state/editorUiStore'
 import { StageCharacter } from './StageCharacter'
 import { StageBackground } from './StageBackground'
-import { DialogueBox } from './DialogueBox'
+import { StageDialogueBox } from './StageDialogueBox'
 import { ChoiceOverlay } from './ChoiceOverlay'
 
 export function StageCanvas() {
@@ -56,20 +56,21 @@ export function StageCanvas() {
           )
         })}
 
-        {/* pointer-events-none: this is a read-only preview here (editing happens in the Inspector), and it
-            must not block clicks/drags on characters (e.g. the resize handle) that sit underneath it */}
-        <div className="pointer-events-none">
-          {slide.choices && slide.choices.length > 0 ? (
+        {slide.choices && slide.choices.length > 0 ? (
+          // pointer-events-none: this is a read-only preview here (editing happens in the Inspector), and it
+          // must not block clicks/drags on characters (e.g. the resize handle) that sit underneath it
+          <div className="pointer-events-none">
             <ChoiceOverlay choices={slide.choices} disabled />
-          ) : (
-            <DialogueBox
-              speakerName={speaker?.name ?? null}
-              speakerColor={speaker?.color ?? null}
-              text={firstLine?.text ?? ''}
-              fontSizePx={dialogueFontSizePx}
-            />
-          )}
-        </div>
+          </div>
+        ) : (
+          <StageDialogueBox
+            speakerName={speaker?.name ?? null}
+            speakerColor={speaker?.color ?? null}
+            text={firstLine?.text ?? ''}
+            fontSizePx={dialogueFontSizePx}
+            stageRef={stageRef}
+          />
+        )}
       </div>
     </div>
   )

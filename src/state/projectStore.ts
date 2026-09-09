@@ -1,7 +1,16 @@
 import { create } from 'zustand'
 import { createId } from '../lib/id'
 import { DEFAULT_EXPRESSION } from '../types/project'
-import type { Project, Character, Background, Slide, DialogueLine, Choice, CharacterOnStage } from '../types/project'
+import type {
+  Project,
+  Character,
+  Background,
+  Slide,
+  DialogueLine,
+  Choice,
+  CharacterOnStage,
+  DialogueBoxLayout,
+} from '../types/project'
 
 function createEmptySlide(): Slide {
   return {
@@ -26,6 +35,8 @@ interface ProjectStoreState {
   applyRemoteProject: (project: Project) => void
   markSaved: () => void
   setDialogueFontSize: (sizePx: number) => void
+  setDialogueBoxLayout: (layout: DialogueBoxLayout) => void
+  resetDialogueBoxLayout: () => void
 
   // characters
   addCharacter: (input: { name: string; color: string }) => string
@@ -92,6 +103,13 @@ export const useProjectStore = create<ProjectStoreState>((set) => ({
   markSaved: () => set({ isDirty: false }),
   setDialogueFontSize: (sizePx) =>
     set((state) => ({ project: { ...state.project, dialogueFontSizePx: sizePx }, isDirty: true })),
+  setDialogueBoxLayout: (layout) =>
+    set((state) => ({ project: { ...state.project, dialogueBoxLayout: layout }, isDirty: true })),
+  resetDialogueBoxLayout: () =>
+    set((state) => {
+      const { dialogueBoxLayout: _dialogueBoxLayout, ...rest } = state.project
+      return { project: rest, isDirty: true }
+    }),
 
   addCharacter: ({ name, color }) => {
     const id = createId()

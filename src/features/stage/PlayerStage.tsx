@@ -72,6 +72,7 @@ export function PlayerStage({ project, state, onAdvance, onChoose }: PlayerStage
           speakerColor={speaker?.color ?? null}
           text={currentLine?.text ?? ''}
           fontSizePx={project.dialogueFontSizePx}
+          layout={project.dialogueBoxLayout}
         />
       )}
     </div>

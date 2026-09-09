@@ -63,12 +63,23 @@ export interface Slide {
   nextSlideId?: string
 }
 
+export interface DialogueBoxLayout {
+  /** percentage coordinates (0-100) of the box's top-left corner, resolution independent */
+  xPct: number
+  yPct: number
+  /** size as a percentage of the stage width/height */
+  widthPct: number
+  heightPct: number
+}
+
 export interface Project {
   characters: Character[]
   backgrounds: Background[]
   slides: Slide[]
   /** font size (px) for the dialogue box text, applies to the whole story; defaults to DEFAULT_DIALOGUE_FONT_SIZE_PX */
   dialogueFontSizePx?: number
+  /** position/size of the dialogue box, applies to the whole story; defaults to DEFAULT_DIALOGUE_BOX_LAYOUT */
+  dialogueBoxLayout?: DialogueBoxLayout
 }
 
 export function createEmptyProject(): Project {
@@ -80,6 +91,9 @@ export const DEFAULT_EXPRESSION = 'neutral'
 export const DEFAULT_CHARACTER_SIZE_PCT = 28
 export const DEFAULT_BACKGROUND_POSITION = { xPct: 50, yPct: 50 }
 export const DEFAULT_DIALOGUE_FONT_SIZE_PX = 18
+export const DEFAULT_DIALOGUE_BOX_LAYOUT: DialogueBoxLayout = { xPct: 0, yPct: 75, widthPct: 100, heightPct: 25 }
+export const MIN_DIALOGUE_BOX_WIDTH_PCT = 20
+export const MIN_DIALOGUE_BOX_HEIGHT_PCT = 12
 export const DIALOGUE_FONT_SIZE_PRESETS = [
   { label: 'Klein', px: 14 },
   { label: 'Normal', px: 18 },
