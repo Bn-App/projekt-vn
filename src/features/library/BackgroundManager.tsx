@@ -2,12 +2,14 @@ import { useProjectStore } from '../../state/projectStore'
 import { Button } from '../../components/Button'
 import { TextInput } from '../../components/TextInput'
 import { ImageDropzone } from '../../components/ImageDropzone'
+import { useCanEditDestructively } from '../collab/collabStore'
 
 export function BackgroundManager() {
   const backgrounds = useProjectStore((s) => s.project.backgrounds)
   const addBackground = useProjectStore((s) => s.addBackground)
   const updateBackground = useProjectStore((s) => s.updateBackground)
   const removeBackground = useProjectStore((s) => s.removeBackground)
+  const canDelete = useCanEditDestructively()
 
   return (
     <div className="space-y-3">
@@ -32,9 +34,11 @@ export function BackgroundManager() {
               rows={2}
               className="w-full resize-none rounded border border-slate-200 px-2 py-1 text-xs focus:border-indigo-500 focus:outline-none"
             />
-            <Button variant="danger" className="w-full" onClick={() => removeBackground(bg.id)}>
-              Entfernen
-            </Button>
+            {canDelete && (
+              <Button variant="danger" className="w-full" onClick={() => removeBackground(bg.id)}>
+                Entfernen
+              </Button>
+            )}
           </div>
         ))}
         <button

@@ -1,5 +1,6 @@
 import { useProjectStore } from '../../state/projectStore'
 import { Button } from '../../components/Button'
+import { useCanEditDestructively } from '../collab/collabStore'
 import { NARRATOR_LABEL, DEFAULT_DIALOGUE_FONT_SIZE_PX, DIALOGUE_FONT_SIZE_PRESETS } from '../../types/project'
 import type { Slide } from '../../types/project'
 
@@ -9,6 +10,7 @@ export function DialogueEditor({ slide }: { slide: Slide }) {
   const updateDialogueLine = useProjectStore((s) => s.updateDialogueLine)
   const removeDialogueLine = useProjectStore((s) => s.removeDialogueLine)
   const moveDialogueLine = useProjectStore((s) => s.moveDialogueLine)
+  const canDelete = useCanEditDestructively()
   const dialogueFontSizePx = useProjectStore((s) => s.project.dialogueFontSizePx) ?? DEFAULT_DIALOGUE_FONT_SIZE_PX
   const setDialogueFontSize = useProjectStore((s) => s.setDialogueFontSize)
 
@@ -62,13 +64,15 @@ export function DialogueEditor({ slide }: { slide: Slide }) {
               >
                 ↓
               </button>
-              <button
-                onClick={() => removeDialogueLine(slide.id, i)}
-                disabled={slide.dialogueLines.length === 1}
-                className="px-1 text-xs text-red-400 hover:text-red-600 disabled:opacity-30"
-              >
-                ✕
-              </button>
+              {canDelete && (
+                <button
+                  onClick={() => removeDialogueLine(slide.id, i)}
+                  disabled={slide.dialogueLines.length === 1}
+                  className="px-1 text-xs text-red-400 hover:text-red-600 disabled:opacity-30"
+                >
+                  ✕
+                </button>
+              )}
             </div>
             <textarea
               value={line.text}

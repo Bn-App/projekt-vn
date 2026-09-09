@@ -2,6 +2,7 @@ import { useProjectStore } from '../../state/projectStore'
 import { Button } from '../../components/Button'
 import { TextInput } from '../../components/TextInput'
 import { ImageDropzone } from '../../components/ImageDropzone'
+import { useCanEditDestructively } from '../collab/collabStore'
 import { DEFAULT_EXPRESSION } from '../../types/project'
 import type { Character } from '../../types/project'
 
@@ -17,6 +18,7 @@ function CharacterCard({ character }: { character: Character }) {
   const setCharacterSprite = useProjectStore((s) => s.setCharacterSprite)
   const removeCharacterSprite = useProjectStore((s) => s.removeCharacterSprite)
   const renameCharacterSprite = useProjectStore((s) => s.renameCharacterSprite)
+  const canDelete = useCanEditDestructively()
 
   const expressions = Object.entries(character.sprites)
   const nextAutoExpressionName = expressions.length === 0 ? DEFAULT_EXPRESSION : `ausdruck-${expressions.length + 1}`
@@ -38,9 +40,11 @@ function CharacterCard({ character }: { character: Character }) {
             placeholder="Name der Figur"
             className="max-w-xs"
           />
-          <Button variant="danger" onClick={() => removeCharacter(character.id)}>
-            Entfernen
-          </Button>
+          {canDelete && (
+            <Button variant="danger" onClick={() => removeCharacter(character.id)}>
+              Entfernen
+            </Button>
+          )}
         </div>
         <div>
           <p className="mb-1 text-xs font-medium text-slate-500">Charakterisierung (nur für dich, nicht im Spiel sichtbar)</p>
@@ -81,13 +85,15 @@ function CharacterCard({ character }: { character: Character }) {
                     className="w-16 rounded border border-slate-200 px-1 py-0.5 text-center text-xs"
                     title="Name des Ausdrucks (zum Umbenennen klicken)"
                   />
-                  <button
-                    onClick={() => removeCharacterSprite(character.id, expr)}
-                    className="text-slate-400 hover:text-red-500"
-                    title="Ausdruck entfernen"
-                  >
-                    ✕
-                  </button>
+                  {canDelete && (
+                    <button
+                      onClick={() => removeCharacterSprite(character.id, expr)}
+                      className="text-slate-400 hover:text-red-500"
+                      title="Ausdruck entfernen"
+                    >
+                      ✕
+                    </button>
+                  )}
                 </div>
               </div>
             ))}

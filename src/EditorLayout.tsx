@@ -12,6 +12,9 @@ import { exportProjectAsHtml } from './export/html/exportHtml'
 import { exportProjectAsPptx } from './export/pptx/exportPptx'
 import { exportProjectAsScriptPdf } from './export/pdf/exportPdf'
 import { useProjectPersistence } from './features/persistence/useProjectPersistence'
+import { ShareButton } from './features/collab/ShareButton'
+import { CollabStatusBadge } from './features/collab/CollabStatusBadge'
+import { useCanEditDestructively } from './features/collab/collabStore'
 import type { EditorTab } from './state/editorUiStore'
 
 const TABS: { id: EditorTab; label: string }[] = [
@@ -34,6 +37,7 @@ export function EditorLayout() {
   const project = useProjectStore((s) => s.project)
   const isDirty = useProjectStore((s) => s.isDirty)
   const { save, saveAs, open, newProject, canSaveInPlace } = useProjectPersistence()
+  const canReset = useCanEditDestructively()
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -85,13 +89,19 @@ export function EditorLayout() {
             </button>
           )}
         </div>
-        <div className="flex gap-2 overflow-x-auto pb-1 lg:pb-0">
-          <Button variant="ghost" className="shrink-0" onClick={newProject}>
-            Neu
-          </Button>
-          <Button variant="ghost" className="shrink-0" onClick={() => void open()}>
-            Öffnen…
-          </Button>
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 lg:pb-0">
+          <CollabStatusBadge />
+          <ShareButton />
+          {canReset && (
+            <Button variant="ghost" className="shrink-0" onClick={newProject}>
+              Neu
+            </Button>
+          )}
+          {canReset && (
+            <Button variant="ghost" className="shrink-0" onClick={() => void open()}>
+              Öffnen…
+            </Button>
+          )}
           <Button variant="secondary" className="shrink-0" onClick={() => void save()} title={canSaveInPlace ? 'Strg+S' : undefined}>
             Speichern
           </Button>

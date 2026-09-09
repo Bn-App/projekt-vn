@@ -1,4 +1,5 @@
 import { useProjectStore } from '../../state/projectStore'
+import { useCanEditDestructively } from '../collab/collabStore'
 import type { Slide } from '../../types/project'
 
 export function SlideCharacterPicker({ slide }: { slide: Slide }) {
@@ -6,6 +7,7 @@ export function SlideCharacterPicker({ slide }: { slide: Slide }) {
   const addCharacterToSlide = useProjectStore((s) => s.addCharacterToSlide)
   const removeCharacterFromSlide = useProjectStore((s) => s.removeCharacterFromSlide)
   const updateCharacterOnStage = useProjectStore((s) => s.updateCharacterOnStage)
+  const canDelete = useCanEditDestructively()
 
   const onStageIds = new Set(slide.charactersOnStage.map((c) => c.characterId))
   const available = characters.filter((c) => !onStageIds.has(c.id))
@@ -36,12 +38,14 @@ export function SlideCharacterPicker({ slide }: { slide: Slide }) {
                   </option>
                 ))}
               </select>
-              <button
-                onClick={() => removeCharacterFromSlide(slide.id, character.id)}
-                className="px-1 text-xs text-red-400 hover:text-red-600"
-              >
-                ✕
-              </button>
+              {canDelete && (
+                <button
+                  onClick={() => removeCharacterFromSlide(slide.id, character.id)}
+                  className="px-1 text-xs text-red-400 hover:text-red-600"
+                >
+                  ✕
+                </button>
+              )}
             </div>
           )
         })}

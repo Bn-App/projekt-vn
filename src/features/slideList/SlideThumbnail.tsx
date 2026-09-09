@@ -2,6 +2,8 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useProjectStore } from '../../state/projectStore'
 import { useEditorUiStore } from '../../state/editorUiStore'
+import { useCanEditDestructively } from '../collab/collabStore'
+import { PresenceDots } from '../collab/PresenceDot'
 import { SLIDE_COLOR_TAGS } from '../../types/project'
 import type { Slide } from '../../types/project'
 
@@ -19,6 +21,7 @@ export function SlideThumbnail({ slide, index, isSelected }: SlideThumbnailProps
   const setSlideSectionTitle = useProjectStore((s) => s.setSlideSectionTitle)
   const setSlideColorTag = useProjectStore((s) => s.setSlideColorTag)
   const closeSlidesPanel = useEditorUiStore((s) => s.closeSlidesPanel)
+  const canDelete = useCanEditDestructively()
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: slide.id })
   const style = { transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.5 : 1 }
@@ -40,13 +43,15 @@ export function SlideThumbnail({ slide, index, isSelected }: SlideThumbnailProps
             placeholder="Überschrift"
             className="min-w-0 flex-1 rounded border border-transparent bg-transparent px-1 py-0.5 text-xs font-bold uppercase tracking-wide text-slate-500 hover:border-slate-200 focus:border-indigo-500 focus:bg-white focus:outline-none"
           />
-          <button
-            onClick={() => setSlideSectionTitle(slide.id, null)}
-            title="Überschrift entfernen"
-            className="text-xs text-slate-300 hover:text-red-500"
-          >
-            ✕
-          </button>
+          {canDelete && (
+            <button
+              onClick={() => setSlideSectionTitle(slide.id, null)}
+              title="Überschrift entfernen"
+              className="text-xs text-slate-300 hover:text-red-500"
+            >
+              ✕
+            </button>
+          )}
         </div>
       )}
       <div
@@ -79,6 +84,7 @@ export function SlideThumbnail({ slide, index, isSelected }: SlideThumbnailProps
             {background?.imageDataUrl && (
               <img src={background.imageDataUrl} alt="" className="h-full w-full object-cover" />
             )}
+            <PresenceDots slideId={slide.id} />
             {hasChoices && (
               <span className="absolute right-0.5 top-0.5 rounded bg-amber-400 px-1 text-[10px] font-bold text-white" title="Enthält Antwortmöglichkeiten">
                 🔀
@@ -118,7 +124,7 @@ export function SlideThumbnail({ slide, index, isSelected }: SlideThumbnailProps
                 style={{ backgroundColor: color }}
               />
             ))}
-            {slide.colorTag && (
+            {slide.colorTag && canDelete && (
               <button
                 onClick={(e) => {
                   e.stopPropagation()
@@ -152,15 +158,17 @@ export function SlideThumbnail({ slide, index, isSelected }: SlideThumbnailProps
             >
               Duplizieren
             </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-                removeSlide(slide.id)
-              }}
-              className="rounded px-1.5 py-0.5 text-[11px] text-red-500 hover:bg-red-50"
-            >
-              Löschen
-            </button>
+            {canDelete && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  removeSlide(slide.id)
+                }}
+                className="rounded px-1.5 py-0.5 text-[11px] text-red-500 hover:bg-red-50"
+              >
+                Löschen
+              </button>
+            )}
           </div>
         </div>
       </div>

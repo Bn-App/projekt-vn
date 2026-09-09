@@ -1,5 +1,6 @@
 import { useProjectStore } from '../../state/projectStore'
 import { Button } from '../../components/Button'
+import { useCanEditDestructively } from '../collab/collabStore'
 import type { Slide } from '../../types/project'
 
 function slideLabel(slide: Slide, index: number): string {
@@ -18,6 +19,7 @@ export function ChoiceEditor({ slide }: { slide: Slide }) {
   const addSlide = useProjectStore((s) => s.addSlide)
   const setSlideIsEnding = useProjectStore((s) => s.setSlideIsEnding)
   const setSlideNextSlideId = useProjectStore((s) => s.setSlideNextSlideId)
+  const canDelete = useCanEditDestructively()
 
   const hasChoices = !!slide.choices
   const hasCustomNext = slide.nextSlideId !== undefined
@@ -33,9 +35,11 @@ export function ChoiceEditor({ slide }: { slide: Slide }) {
       <div className="flex items-center justify-between">
         <h3 className="text-xs font-semibold uppercase tracking-wide text-amber-700">Antworten &amp; Verzweigung</h3>
         {hasChoices ? (
-          <button onClick={() => disableChoices(slide.id)} className="text-xs text-slate-500 underline hover:text-slate-700">
-            Deaktivieren
-          </button>
+          canDelete && (
+            <button onClick={() => disableChoices(slide.id)} className="text-xs text-slate-500 underline hover:text-slate-700">
+              Deaktivieren
+            </button>
+          )
         ) : (
           <Button onClick={() => enableChoices(slide.id)}>+ Antworten aktivieren</Button>
         )}
@@ -109,9 +113,11 @@ export function ChoiceEditor({ slide }: { slide: Slide }) {
                   placeholder="Antworttext, z.B. „Ich vertraue dir“"
                   className="flex-1 rounded border border-slate-200 px-2 py-1 text-sm focus:border-indigo-500 focus:outline-none"
                 />
-                <button onClick={() => removeChoice(slide.id, i)} className="px-1 text-xs text-red-400 hover:text-red-600">
-                  ✕
-                </button>
+                {canDelete && (
+                  <button onClick={() => removeChoice(slide.id, i)} className="px-1 text-xs text-red-400 hover:text-red-600">
+                    ✕
+                  </button>
+                )}
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="text-xs text-slate-400">führt zu</span>

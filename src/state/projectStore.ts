@@ -22,6 +22,8 @@ interface ProjectStoreState {
   isDirty: boolean
 
   loadProject: (project: Project) => void
+  /** used by the collab sync layer to adopt a project snapshot received from a peer, without resetting the current selection like loadProject does */
+  applyRemoteProject: (project: Project) => void
   markSaved: () => void
   setDialogueFontSize: (sizePx: number) => void
 
@@ -79,6 +81,14 @@ export const useProjectStore = create<ProjectStoreState>((set) => ({
 
   loadProject: (project) =>
     set({ project, selectedSlideId: project.slides[0]?.id ?? null, isDirty: false }),
+  applyRemoteProject: (project) =>
+    set((state) => ({
+      project,
+      selectedSlideId: project.slides.some((s) => s.id === state.selectedSlideId)
+        ? state.selectedSlideId
+        : (project.slides[0]?.id ?? null),
+      isDirty: true,
+    })),
   markSaved: () => set({ isDirty: false }),
   setDialogueFontSize: (sizePx) =>
     set((state) => ({ project: { ...state.project, dialogueFontSizePx: sizePx }, isDirty: true })),
