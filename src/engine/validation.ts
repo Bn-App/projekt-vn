@@ -11,6 +11,9 @@ export function validateProject(project: Project): StoryIssue[] {
   const slideIds = new Set(project.slides.map((s) => s.id))
 
   for (const slide of project.slides) {
+    if (slide.isTitleSlide && !slide.titleText?.trim()) {
+      issues.push({ slideId: slide.id, message: 'Titelkarte hat noch keinen Titeltext.' })
+    }
     if (slide.isEnding && slide.choices && slide.choices.length > 0) {
       issues.push({
         slideId: slide.id,

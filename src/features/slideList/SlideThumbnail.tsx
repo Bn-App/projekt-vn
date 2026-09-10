@@ -85,6 +85,11 @@ export function SlideThumbnail({ slide, index, isSelected }: SlideThumbnailProps
               <img src={background.imageDataUrl} alt="" className="h-full w-full object-cover" />
             )}
             <PresenceDots slideId={slide.id} />
+            {slide.isTitleSlide && (
+              <span className="absolute bottom-0.5 left-0.5 rounded bg-indigo-600 px-1 text-[10px] font-bold text-white" title="Titelkarte">
+                🎬
+              </span>
+            )}
             {hasChoices && (
               <span className="absolute right-0.5 top-0.5 rounded bg-amber-400 px-1 text-[10px] font-bold text-white" title="Enthält Antwortmöglichkeiten">
                 🔀

@@ -5,6 +5,7 @@ import { StageCharacter } from './StageCharacter'
 import { StageBackground } from './StageBackground'
 import { StageDialogueBox } from './StageDialogueBox'
 import { ChoiceOverlay } from './ChoiceOverlay'
+import { TitleCard } from './TitleCard'
 
 export function StageCanvas() {
   const slide = useSelectedSlide()
@@ -61,6 +62,10 @@ export function StageCanvas() {
           // must not block clicks/drags on characters (e.g. the resize handle) that sit underneath it
           <div className="pointer-events-none">
             <ChoiceOverlay choices={slide.choices} disabled />
+          </div>
+        ) : slide.isTitleSlide ? (
+          <div className="pointer-events-none">
+            <TitleCard text={slide.titleText ?? ''} />
           </div>
         ) : (
           <StageDialogueBox

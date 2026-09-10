@@ -1,5 +1,6 @@
 import { DialogueBox } from './DialogueBox'
 import { ChoiceOverlay } from './ChoiceOverlay'
+import { TitleCard } from './TitleCard'
 import { getAvailableChoices, getCurrentLine } from '../../engine/playerEngine'
 import { DEFAULT_CHARACTER_SIZE_PCT, DEFAULT_BACKGROUND_POSITION } from '../../types/project'
 import type { Project } from '../../types/project'
@@ -66,6 +67,8 @@ export function PlayerStage({ project, state, onAdvance, onChoose }: PlayerStage
       })}
       {choices ? (
         <ChoiceOverlay choices={choices} onChoose={onChoose} />
+      ) : slide.isTitleSlide ? (
+        <TitleCard text={slide.titleText ?? ''} />
       ) : (
         <DialogueBox
           speakerName={speaker?.name ?? null}

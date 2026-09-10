@@ -229,6 +229,21 @@ describe('playerEngine', () => {
     expect(state.currentSlideId).toBe('c')
   })
 
+  it('advances past a title slide with a single click, regardless of its dialogue line count', () => {
+    const project: Project = {
+      characters: [],
+      backgrounds: [],
+      slides: [
+        { ...slide('title', ['line1', 'line2', 'line3']), isTitleSlide: true, titleText: 'MY MOVIE' },
+        slide('b', ['story starts here']),
+      ],
+    }
+    let state = getInitialState(project)
+    expect(state.currentSlideId).toBe('title')
+    state = reduce(project, state, { type: 'ADVANCE_LINE' })
+    expect(state.currentSlideId).toBe('b')
+  })
+
   it('does not advance when nextSlideId is set but still unselected (empty string)', () => {
     const project: Project = {
       characters: [],

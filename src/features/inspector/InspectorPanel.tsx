@@ -4,6 +4,7 @@ import { validateProject } from '../../engine/validation'
 import { TextInput } from '../../components/TextInput'
 import { SlideBackgroundPicker } from './SlideBackgroundPicker'
 import { SlideCharacterPicker } from './SlideCharacterPicker'
+import { TitleSlideEditor } from './TitleSlideEditor'
 import { DialogueEditor } from './DialogueEditor'
 import { ChoiceEditor } from './ChoiceEditor'
 
@@ -50,7 +51,8 @@ export function InspectorPanel() {
             </div>
             <SlideBackgroundPicker slide={slide} />
             <SlideCharacterPicker slide={slide} />
-            <DialogueEditor slide={slide} />
+            <TitleSlideEditor slide={slide} />
+            {!slide.isTitleSlide && <DialogueEditor slide={slide} />}
             <ChoiceEditor slide={slide} />
           </>
         )}

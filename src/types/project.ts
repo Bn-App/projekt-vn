@@ -61,6 +61,10 @@ export interface Slide {
    * selected but no target has been chosen yet (flagged by validation). Ignored if choices or isEnding are set.
    */
   nextSlideId?: string
+  /** if true, this slide shows a centered title card (e.g. a movie-style title) instead of the dialogue box */
+  isTitleSlide?: boolean
+  /** text shown on the title card; supports line breaks */
+  titleText?: string
 }
 
 export interface DialogueBoxLayout {

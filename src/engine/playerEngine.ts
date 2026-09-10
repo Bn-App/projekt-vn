@@ -76,7 +76,8 @@ export function reduce(project: Project, state: PlayerState, action: PlayerActio
     return state // must resolve the choice first
   }
 
-  const hasMoreLines = state.lineIndex < slide.dialogueLines.length - 1
+  // a title slide has no dialogue of its own to step through - any advance moves straight past it
+  const hasMoreLines = !slide.isTitleSlide && state.lineIndex < slide.dialogueLines.length - 1
   if (hasMoreLines) {
     return { ...state, lineIndex: state.lineIndex + 1 }
   }
